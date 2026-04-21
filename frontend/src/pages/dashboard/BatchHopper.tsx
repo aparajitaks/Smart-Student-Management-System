@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeftRight, CheckCircle2, AlertCircle, Search, Loader2 } from 'lucide-react';
-import { batchService, Batch, Student } from '../../services/batchService';
+import { batchService } from '../../services/batchService';
+import type { Batch, Student } from '../../services/batchService';
 
 export const BatchHopper = () => {
   const [students, setStudents] = useState<Student[]>([]);
