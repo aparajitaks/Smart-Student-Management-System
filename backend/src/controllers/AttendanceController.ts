@@ -18,7 +18,7 @@ export const markAttendance = async (req: Request, res: Response, next: NextFunc
 export const getStudentAttendance = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { studentId } = req.params;
-    const stats = await attendanceService.getStudentAttendance(studentId);
+    const stats = await attendanceService.getStudentAttendance(studentId as string);
     res.status(200).json({
       status: 'success',
       data: stats

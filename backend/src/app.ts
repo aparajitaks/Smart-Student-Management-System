@@ -26,7 +26,7 @@ app.use('/api/v1/notices', noticeRoutes);
 app.use('/api/v1/results', resultRoutes);
 
 // Undefined routes
-app.all('*', (req, res, next) => {
+app.use((req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
