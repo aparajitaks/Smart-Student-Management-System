@@ -11,6 +11,12 @@ export class AuthService {
     });
   }
 
+  private signRefreshToken(id: string) {
+    return jwt.sign({ id }, process.env.JWT_REFRESH_SECRET!, {
+      expiresIn: process.env.JWT_REFRESH_EXPIRES_IN
+    });
+  }
+
   async login(email: string, password: string) {
     const user = await UserModel.findOne({ email }).select('+password');
 
@@ -19,7 +25,33 @@ export class AuthService {
     }
 
     const token = this.signToken(user._id as string);
-    return { user, token };
+    const refreshToken = this.signRefreshToken(user._id as string);
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    return { user, token, refreshToken };
+  }
+
+  async refreshToken(token: string) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET!) as any;
+      const user = await UserModel.findById(decoded.id).select('+refreshToken');
+
+      if (!user || user.refreshToken !== token) {
+        throw new AppError('Invalid refresh token', 401);
+      }
+
+      const newToken = this.signToken(user._id as string);
+      const newRefreshToken = this.signRefreshToken(user._id as string);
+
+      user.refreshToken = newRefreshToken;
+      await user.save({ validateBeforeSave: false });
+
+      return { token: newToken, refreshToken: newRefreshToken };
+    } catch (error) {
+      throw new AppError('Invalid refresh token', 401);
+    }
   }
 
   async register(data: Partial<IUser>) {

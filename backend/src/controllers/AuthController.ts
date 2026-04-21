@@ -16,7 +16,22 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     res.status(200).json({
       status: 'success',
       token,
+      refreshToken,
       data: { user }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { refreshToken } = req.body;
+    const result = await authService.refreshToken(refreshToken);
+
+    res.status(200).json({
+      status: 'success',
+      ...result
     });
   } catch (error) {
     next(error);
