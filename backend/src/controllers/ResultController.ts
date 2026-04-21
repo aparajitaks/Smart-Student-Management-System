@@ -17,7 +17,7 @@ export const addResult = async (req: Request, res: Response, next: NextFunction)
 
 export const getStudentResults = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const results = await resultService.getStudentResults(req.params.studentId);
+    const results = await resultService.getStudentResults(req.params.studentId as string);
     res.status(200).json({
       status: 'success',
       data: results
