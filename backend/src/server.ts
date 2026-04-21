@@ -5,10 +5,9 @@ import app from './app';
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
-const DB = process.env.DATABASE!.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD!
-);
+const DB = process.env.DATABASE!.includes('<PASSWORD>') 
+  ? process.env.DATABASE!.replace('<PASSWORD>', process.env.DATABASE_PASSWORD!)
+  : process.env.DATABASE!;
 
 mongoose
   .connect(DB)
