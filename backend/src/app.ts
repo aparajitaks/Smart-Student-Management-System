@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes';
 import batchRoutes from './routes/batchRoutes';
+import studentRoutes from './routes/studentRoutes';
 import attendanceRoutes from './routes/attendanceRoutes';
 import noticeRoutes from './routes/noticeRoutes';
 import resultRoutes from './routes/resultRoutes';
@@ -21,6 +22,7 @@ app.use(cookieParser());
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/batches', batchRoutes);
+app.use('/api/v1/students', studentRoutes);
 app.use('/api/v1/attendance', attendanceRoutes);
 app.use('/api/v1/notices', noticeRoutes);
 app.use('/api/v1/results', resultRoutes);

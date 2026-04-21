@@ -7,6 +7,12 @@ const router = express.Router();
 
 router.use(protect);
 
+router.get(
+  '/',
+  restrictTo(UserRole.ADMIN, UserRole.TEACHER),
+  batchController.getAllBatches
+);
+
 router.post(
   '/transfer', 
   restrictTo(UserRole.ADMIN), 

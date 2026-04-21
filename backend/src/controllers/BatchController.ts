@@ -36,3 +36,15 @@ export const getBatchAnalytics = async (req: Request, res: Response, next: NextF
     next(error);
   }
 };
+
+export const getAllBatches = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const batches = await batchService.getAllBatches();
+    res.status(200).json({
+      status: 'success',
+      data: { batches }
+    });
+  } catch (error) {
+    next(error);
+  }
+};

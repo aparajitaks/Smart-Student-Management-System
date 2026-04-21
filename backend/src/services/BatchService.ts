@@ -67,4 +67,8 @@ export class BatchService {
     }));
     return analytics;
   }
+
+  async getAllBatches() {
+    return await this.batchRepo.find();
+  }
 }
