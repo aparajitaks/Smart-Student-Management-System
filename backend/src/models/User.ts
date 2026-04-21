@@ -12,7 +12,8 @@ const userSchema = new Schema<IUserDocument>(
       type: String, 
       enum: Object.values(UserRole), 
       required: true 
-    }
+    },
+    refreshToken: { type: String, select: false }
   },
   {
     timestamps: true,
