@@ -23,7 +23,18 @@ const menuItems = [
   { icon: BarChart3, label: 'Analytics', path: '/dashboard/analytics' },
 ];
 
+import { useAuthStore } from '../../store/useAuthStore';
+import { useNavigate } from 'react-router-dom';
+
 export const Sidebar = () => {
+  const logout = useAuthStore((state) => state.logout);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <aside className="w-64 h-screen glass-dark border-r border-white/5 flex flex-col p-4">
       <div className="flex items-center gap-3 px-2 mb-10">
@@ -51,7 +62,10 @@ export const Sidebar = () => {
         ))}
       </nav>
 
-      <button className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-rose-400 transition-colors mt-auto">
+      <button 
+        onClick={handleLogout}
+        className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-rose-400 transition-colors mt-auto"
+      >
         <LogOut size={20} />
         <span className="font-medium">Logout</span>
       </button>

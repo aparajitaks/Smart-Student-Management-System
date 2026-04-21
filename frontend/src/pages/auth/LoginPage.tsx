@@ -1,18 +1,33 @@
+import { GraduationCap, Mail, Lock, AlertCircle } from 'lucide-react';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { GraduationCap, Mail, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
+import { useAuthStore } from '../../store/useAuthStore';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate login
-    console.log('Login:', { email, password });
-    // navigate('/dashboard');
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      const { user, token } = response.data.data;
+      setAuth(user, token);
+      navigate('/dashboard');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -33,6 +48,17 @@ export const LoginPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2"
+            >
+              <AlertCircle size={16} />
+              {error}
+            </motion.div>
+          )}
+
           <div className="space-y-2">
             <label className="text-sm font-medium text-slate-300">Email Address</label>
             <div className="relative">
@@ -65,9 +91,14 @@ export const LoginPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20"
+            disabled={isLoading}
+            className={`w-full font-semibold py-3 rounded-xl transition-all shadow-lg ${
+              isLoading 
+                ? 'bg-slate-700 text-slate-400 cursor-not-allowed' 
+                : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20'
+            }`}
           >
-            Sign In
+            {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
       </motion.div>
