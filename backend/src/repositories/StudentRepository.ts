@@ -13,4 +13,13 @@ export class StudentRepository extends BaseRepository<any> {
   async updateBatch(studentId: string, batchId: string) {
     return this.model.findByIdAndUpdate(studentId, { batchId }, { new: true });
   }
+
+  async search(query: string) {
+    return this.model.find({
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { rollNumber: { $regex: query, $options: 'i' } }
+      ]
+    }).limit(10);
+  }
 }
